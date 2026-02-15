@@ -1,4 +1,5 @@
 #!/bin/bash
-echo "Hello from Jenkins Auto Build"
+echo "AUTO BUILD TEST SUCCESS"
+
 
 # Added a test line
