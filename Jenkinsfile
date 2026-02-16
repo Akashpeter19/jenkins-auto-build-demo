@@ -1,22 +1,61 @@
+@Library('shared-lib') _
+
 pipeline {
     agent any
+
     stages {
-        stage('Run Script') {
+
+        stage('Initialize') {
             steps {
-                sh './hello.sh'
+                echo "Pipeline Started..."
+                buildInfo()
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo "Simulating Build Process..."
+                sh 'echo Building project...'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo "Simulating Test Stage..."
+                sh 'echo Running tests...'
             }
         }
     }
+
     post {
+
         success {
-            mail to: 'impeter2245@gmail.com',
-                 subject: "Jenkins Build Success",
-                 body: "Build completed successfully for hello.sh"
+            emailext(
+                subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+Build Successful
+
+Job: ${env.JOB_NAME}
+Build: ${env.BUILD_NUMBER}
+URL: ${env.BUILD_URL}
+""",
+                to: "akashpeterp@gmail.com"
+            )
         }
+
         failure {
-            mail to: 'impeter2245@gmail.com',
-                 subject: "Jenkins Build Failed",
-                 body: "Build failed. Check Jenkins console."
+            emailext(
+                subject: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+Build Failed
+
+Job: ${env.JOB_NAME}
+Build: ${env.BUILD_NUMBER}
+URL: ${env.BUILD_URL}
+""",
+                to: "akashpeterp@gmail.com"
+            )
         }
     }
 }
+
